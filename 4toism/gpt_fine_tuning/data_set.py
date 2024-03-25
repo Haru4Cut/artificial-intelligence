@@ -1,0 +1,160 @@
+import pandas as pd
+
+def diaryToPrompt():
+    diaries_train = ["누구랑: 가족/무엇을: 오늘은 가족들과 함께 우리 집 근처 공원에서 피크닉을 즐겼어. 엄마가 준비해 온 간식과 함께 나무 그늘 아래에서 책을 읽으며 시간을 보냈어./어디에서: 공원",
+                "누구랑: 친구/무엇을: 오늘은 친구와 함께 영화를 보러 갔어. 신나는 액션 영화를 시간 가는 줄 모르고 즐겼어. 마지막에는 함께 맛있는 음식을 먹으며 하루를 마무리했어./어디에서: 영화관",
+                "누구랑: 혼자/무엇을: 오늘은 혼자 집에서 영화를 보며 휴식을 취했어. 책상에 앉아 컴퓨터 앞에서 쿠션에 누워 마음을 가라앉혔어./어디에서: 집",
+                "누구랑: 반려동물/무엇을: 오늘은 강아지와 함께 공원을 산책했어. 바람을 맞으며 햇살 아래 걷는 것이 기분 좋았어. 강아지가 주는 사랑스러운 모습에 마음이 따뜻해졌어./어디에서: 공원",
+                "누구랑: 동료/무엇을: 오늘은 동료들과 함께 회의를 진행했어. 아이디어를 공유하고 토론하는 과정에서 새로운 시각을 얻었고, 협업하는 느낌이 좋았어./어디에서: 회사",
+                "누구랑: 남자친구/무엇을: 오늘은 산으로 등산을 다녀왔어. 힘들었지만 정상에서 보는 경치와 바람소리를 들으며 마음을 가다듬었어./어디에서: 산",
+                "누구랑: 소중한 사람/무엇을: 오늘은 소중한 사람과 함께 기념일을 축하했어. 함께 맛있는 저녁을 먹으며 소중한 추억을 나눴어./어디에서: 레스토랑",
+                "누구랑: 스스로/무엇을: 오늘은 스스로를 위한 시간을 가졌어. 집에서 조용한 음악을 들으며 마음을 정리하고 내 자신을 위한 다짐을 했어./어디에서: 집",
+                "누구랑: 엄마/무엇을: 오늘은 엄마와 함께 요리를 했어. 엄마의 가르침을 받으며 함께 만든 음식을 먹는 것이 기쁘고 행복했어./어디에서: 부엌",
+                "누구랑: 친구들/무엇을: 오늘은 친구들과 함께 카페에서 시간을 보냈어. 커피를 마시며 이야기를 나누고 함께하는 것이 즐거웠어./어디에서: 카페",
+                "누구랑: 아이/무엇을: 오늘은 아이와 함께 공원에서 놀았어. 그의 순수한 미소와 함께 뛰어놀면서 잊지 못할 추억을 만들었어./어디에서: 공원",
+                "누구랑: 사랑하는 이/무엇을: 오늘은 사랑하는 이와 함께 피크닉을 다녀왔어. 바람에 흔들리는 나뭇가지 소리와 함께하는 시간이 특별하고 행복했어./어디에서: 공원",
+                "누구랑: 가족/무엇을: 오늘은 가족들과 함께 집에서 영화를 보았어. 함께 보는 것이 따뜻하고 편안했어./어디에서: 집",
+                "누구랑: 친구/무엇을: 오늘은 친구와 함께 공원에서 자전거를 타고 놀았어. 바람을 맞으면서 즐거운 시간을 보냈어./어디에서: 공원",
+                "누구랑: 스스로/무엇을: 오늘은 혼자 집에서 책을 읽었어. 조용한 공간에서 마음을 가다듬는 것이 좋았어./어디에서: 집",
+                "누구랑: 소중한 사람/무엇을: 오늘은 소중한 사람과 함께 카페에서 대화를 나눴어. 함께하는 시간이 소중하고 행복했어./어디에서: 카페",
+                "누구랑: 가족/무엇을: 오늘은 가족들과 함께 식사를 했어. 함께하는 것이 기쁘고 행복했어./어디에서: 강남 오제제",
+                "누구랑: 친구들/무엇을: 오늘은 친구들과 함께 산책을 다녀왔어. 서로의 이야기를 듣고 걸으면서 마음이 편안해졌어./어디에서: 동네 공원",
+                "누구랑: 가족/무엇을: 오늘은 가족들과 함께 집에서 요리를 해먹었어. 함께 만든 음식을 먹으면서 따뜻한 대화를 나누는 것이 기쁘고 행복했어./어디에서: 주방",
+                "누구랑: 스스로/무엇을: 오늘은 혼자 집에서 피아노를 치며 시간을 보냈어. 음악에 몰입하면서 마음이 편안해졌어./어디에서: 거실",
+                "누구랑: 소중한 사람/무엇을: 오늘은 소중한 사람과 함께 자전거를 타고 여행을 다녀왔어. 함께하는 시간이 특별하고 행복했어./어디에서: 자전거 도로",
+                "누구랑: 가족/무엇을: 오늘은 가족들과 함께 영화를 보았어. 함께 보는 것이 기분이 좋았고 특별했어./어디에서: 집"
+                "누구랑: 친구/무엇을: 오늘은 친구와 함께 공원에서 테니스를 즐겼어. 함께 승부하고 웃으면서 즐거운 시간을 보냈어./어디에서: 공원 테니스장",
+                "누구랑: 동료/무엇을: 오늘은 동료들과 함께 업무 회의를 했어. 함께 아이디어를 나누고 해결책을 찾아가는 과정이 흥미로웠어./어디에서: 회의실",
+                "누구랑: 스스로/무엇을: 오늘은 혼자 서점에서 책을 골라 구매했어. 책을 펼치며 시간을 보내는 것이 즐거웠어./어디에서: 서점",
+                "누구랑: 자연/무엇을: 오늘은 산으로 등산을 다녀왔어. 힘들었지만 정상에서 바라보는 풍경이 너무 아름다웠어./어디에서: 산",
+                "누구랑: 가족/무엇을: 오늘은 가족들과 함께 산책을 다녀왔어. 함께하는 것이 평화로웠어./어디에서: 공원",
+                "누구랑: 친구/무엇을: 오늘은 친구와 함께 자전거를 타고 놀았어. 바람을 맞으며 신선한 공기를 마시는 것이 좋았어./어디에서: 자전거도로",
+                "누구랑: 동료/무엇을: 오늘은 동료들과 함께 업무 회의를 진행했어. 새로운 아이디어를 공유하는 것이 흥미로웠어./어디에서: 회사",
+                "누구랑: 스스로/무엇을: 오늘은 혼자 커피를 마시러 카페에 갔어. 조용한 분위기에서 책을 읽는 것이 기분 좋았어./어디에서: 카페",
+                "누구랑: 소중한 사람/무엇을: 오늘은 소중한 사람과 함께 공연을 관람했어. 함께한 시간이 특별하고 기억에 남는 순간이었어./어디에서: 공연장",
+                "누구랑: 가족/무엇을: 오늘은 가족들과 함께 집에서 요리를 했어. 함께하는 것이 특별하고 소중했어./어디에서: 집",
+                "누구랑: 친구/무엇을: 오늘은 친구와 함께 공원에서 테니스를 즐겼어. 함께 스포츠를 즐기는 것이 기분 좋았어./어디에서: 공원",
+                "누구랑: 스스로/무엇을: 오늘은 혼자 영화를 보며 휴식을 취했어. 마음을 가라앉히는 것이 필요했어./어디에서: 집",
+                "누구랑: 반려동물/무엇을: 오늘은 반려동물과 함께 공원을 산책했어. 함께하는 것이 행복하고 신선했어./어디에서: 공원",
+                "누구랑: 가족/무엇을: 오늘은 가족들과 함께 야외 바베큐를 즐겼어. 함께 음식을 만들고 먹는 것이 즐거웠어./어디에서: 바베큐장",
+                "누구랑: 동기 친구들/무엇을: 오늘은 동기 친구들과 함께 프로젝트 회의를 했어. 아이디어를 나누고 계획을 세우는 과정에서 새로운 발견이 많아 좋았어./어디에서: 대학 도서관",
+                "누구랑: 연구실 동료/무엇을: 오늘은 연구실 동료들과 함께 실험을 진행했어. 데이터를 분석하고 결과를 공유하면서 함께 성장하는 기분이 들었어./어디에서: 대학 연구실",
+                "누구랑: 기숙사 친구들/무엇을: 오늘은 기숙사 친구들과 함께 저녁을 먹었어. 바쁜 일상 속에서도 함께하는 식사는 힐링이 되었어./어디에서: 대학 기숙사 식당",
+                "누구랑: 학과 동기/무엇을: 오늘은 학과 동기들과 함께 수업을 들었어. 수업 내용을 공유하고 서로 도움을 주고받으면서 공부하는 것이 효율적이었어./어디에서: 대학 강의실",
+                "누구랑: 새로운 친구/무엇을: 오늘은 새로운 친구를 만났어. 함께 커피를 마시면서 이야기를 나누고 서로에 대해 알아가는 시간이 즐거웠어./어디에서: 대학 근처 카페",
+                "누구랑: 동아리 동료/무엇을: 오늘은 동아리 동료들과 함께 공연 준비를 했어. 연습하고 소품을 만들면서 팀원들과의 협업이 원활했어./어디에서: 대학 학생회실",
+                "누구랑: 스터디 그룹/무엇을: 오늘은 스터디 그룹과 함께 과제를 준비했어. 서로 질문하고 토론하면서 공부하는 과정이 도움이 많이 되었어./어디에서: 대학 도서관",
+                "누구랑: 연구실 동료/무엇을: 오늘은 연구실 동료들과 함께 실험 결과를 분석했어. 함께 문제를 해결하고 새로운 아이디어를 고민하는 시간이 유익했어./어디에서: 대학 연구실",
+                "누구랑: 동기 친구들/무엇을: 오늘은 동기 친구들과 함께 휴식을 즐겼어. 바쁜 일상에서 벗어나 함께 노는 것이 기분 전환에 좋았어./어디에서: 대학 캠퍼스"]
+    
+    diaries_valid = ["누구랑: 친구/무엇을: 친구와 함께 공부를 했다./어디에서: 카페",
+                "누구랑: 동아리 동료/무엇을: 동아리 활동으로 피크닉을 즐겼다./어디에서: 학교 근처 공원",
+                "누구랑: 대학교 동기들/무엇을: 신입생 환영회에 가서 술을 마셨다./어디에서: 화양리 술집",
+                "누구랑: 가족/무엇을: 맛있는 저녁을 먹었다./어디에서: 집",
+                "누구랑: 동기들/무엇을: 프로젝트 준비를 위해 회의를 하였다/어디에서: 도서관",
+                "누구랑: 용준이/무엇을: 카페에서 아이스 아메리카노를 마시며 이야기를 나눴다./어디에서: 학교 카페",
+                "누구랑: 동아리 동료/무엇을: 함께 춤 연습을 했다./어디에서: 동아리방",
+                "누구랑: 혼자/무엇을: 새로운 도전을 위해 스포츠 동아리에 가입했다./어디에서: 학교 체육관",
+                "누구랑: 친구들/무엇을: 수업 전 간단한 점심을 먹었다./어디에서: 학교 근처 편의점",
+                "누구랑: 대학교 동기들/무엇을: 신입생들을 환영하는 행사를 준비했다./어디에서: 동아리방",
+                "누구랑: 친구들/무엇을: 토론 대회를 위해 자료를 조사했다./어디에서: 학교 도서관",
+                "누구랑: 부모님/무엇을: 기숙사 입주를 하여 기숙사 방청소를 했다./어디에서: 학교 기숙사",
+                "누구랑: 가족/무엇을: 어벤져스가 개봉해서 함께 영화를 보러 갔다./어디에서: 건대 cgv",
+                "누구랑: 수민이/무엇을: 책을 읽고 카공(카페에서 공부)을 했다./어디에서: 학교 근처 카페",
+                "누구랑: 동아리 12기 회원들/무엇을: 동아리 tave 12기를 맞아 OT 행사를 진행했다./어디에서: 서울시립대학교",
+                "누구랑: 스터디 팀원들/무엇을: 스터디를 진행하여 발표하였다./어디에서: 세종대학교",
+                "누구랑: 혼자/무엇을: 헬스장에 가서 운동을 시작했다./어디에서: 학교 체육관",
+                "누구랑: 대학교 동기들/무엇을: 과제를 끝내고 힐링타임을 가졌다./어디에서: 카페",
+                "누구랑: 여자친구/무엇을: 세종대학교 축제에 놀러가서 연예인들을 봤다./어디에서: 인하대학교 축제",
+                "누구랑: 소희/무엇을: 캐치볼을 했다./어디에서: 학교 운동장",
+                "누구랑: 팀원들/무엇을: 학교 졸업작품을 준비하면서 밤샘 공부를 했다./어디에서: 학교 강의실",
+                ]
+    
+    prompts_train = ["A family enjoying a picnic at a park near their home, sitting under the shade of a tree, reading books, and enjoying snacks prepared by their mother.",
+                "With a friend, today I went to see an exciting action movie at a movie theater, and in the end, we finished the day by eating delicious food together.",
+                "A person finding peace of mind while resting alone at home today, sitting at a desk, lying back on a cushion in front of a computer.",
+                "Today, I took a walk in the park with my dog, feeling the sunshine and wind on my face, my heart warmed by the lovely sight of my dog.",
+                "Colleagues having a productive meeting at the office, sharing ideas and engaging in discussions, gaining new perspectives and enjoying collaboration.",
+                "A man and his boyfriend cleansing their minds while hiking in the mountains today, enjoying the view and listening to the sound of the wind at the summit.",
+                "A person commemorating an anniversary with a loved one at a restaurant, enjoying a delicious dinner together and sharing precious memories.",
+                "A person spending a peaceful moment alone at home, listening to calming music, reflecting on themselves, and making self-improvement goals.",
+                "A mother and child smiling and enjoying the process of cooking together in the warm and happy atmosphere of the kitchen.",
+                "A group of friends sitting together at a cozy cafe, enjoying coffee, having conversations, and spending quality time together.",
+                "A child playing happily in the park, creating unforgettable memories with pure smiles while running around and enjoying the surroundings.",
+                "A couple creating special and joyful memories together on a picnic at the park, accompanied by the rustling of tree branches in the wind.",
+                "A family gathered on a cozy couch, watching a movie together at home, with smiles on their faces, enjoying a warm and comfortable moment.",
+                "Friends having a great time riding bicycles in the park, enjoying the breeze and having fun together.",
+                "A person finding peace and relaxation while reading a book alone at home in the calm and quiet atmosphere.",
+                "A special moment shared with a loved one at a cafe, engaging in conversation and cherishing the time spent together.",
+                "A family enjoying a meal together at a restaurant in Gangnam, Ohjehje, looking happy and content.",
+                "A group of friends enjoying a leisurely walk in the neighborhood park, chatting and sharing stories as they stroll.",
+                "A family cooking and sharing a meal together at home in the warm and inviting kitchen, creating meaningful and special memories.",
+                "A person immersed in music while playing the piano alone at home in the soothing and peaceful living room.",
+                "A person making special memories and enjoying a happy time together while riding a bicycle on a dedicated bike lane with a loved one.",
+                "A family creating a special and joyful moment by watching a movie together at home.",
+                "Colleagues engaged in a lively discussion during a work meeting in a conference room, sharing ideas and brainstorming together.",
+                "A person happily selecting and buying books alone at a bookstore, enjoying their time spent in the bookstore.",
+                "A person feeling accomplished and enjoying the breathtaking view at the top of a mountain after finishing a challenging hike.",
+                "A family enjoying a peaceful walk together in the park, bonding and cherishing each other's company.",
+                "Friends having fun biking together on a bike path, feeling the fresh air and enjoying the freedom of riding.",
+                "Colleagues collaborating and discussing new ideas during a work meeting in a conference room at the office.",
+                "A person enjoying a moment of tranquility alone at a cafe, reading a book and sipping coffee in the serene atmosphere.",
+                "A special moment at a theater, enjoying a performance with a loved one, creating cherished memories together.",
+                "A family cooking together at home, sharing laughter and love while preparing and enjoying a meal.",
+                "Friends enjoying playing tennis together happily at the park, bonding over sports and shared interests.",
+                "A person unwinding and relaxing alone at home, watching a movie on a sofa, and enjoying the calm and peaceful ambiance.",
+                "A person finding joy and excitement in companionship while walking in the park with their pet.",
+                "A family bonding and enjoying delicious food together at an outdoor barbecue site, creating lasting memories.",
+                "Classmates collaborating and discussing project ideas together in a university library, fostering creativity and teamwork.",
+                "Colleagues conducting experiments and analyzing data together in a university research lab, advancing knowledge and innovation.",
+                "Dormitory friends reconnecting and enjoying a meal together in the university dormitory cafeteria, strengthening friendships.",
+                "Classmates studying together in a university lecture hall, supporting each other's learning and sharing knowledge.",
+                "Two people forming a new friendship and getting to know each other over coffee at a cafe near the university.",
+                "Club members working together to prepare for a performance in the university student council room, showcasing teamwork and dedication.",
+                "A study group collaborating on assignments in a university library, helping each other understand concepts and achieve academic success.",
+                "University laboratory colleagues sharing ideas and brainstorming solutions to research problems, fostering collaboration and innovation.",
+                "Classmates/friends taking a break from their busy lives and enjoying each other's company on a university campus, creating happy memories."]
+    
+    prompts_valid = ["Studying with a friend at a cafe.",
+                "Enjoying a picnic with club members at a park near school.",
+                "Going to a welcoming party for freshmen and having drinks with university classmates at Hwayang-ri pub.",
+                "Having a delicious dinner with family at home.",
+                "Having a meeting with classmates to prepare for a project at the library.",
+                "Having a conversation over iced Americano with Yongjun at a cafe at the school cafe.",
+                "Practicing dancing together with club members at the club room.",
+                "Joining a sports club for a new challenge alone at the school gym.",
+                "Eating a quick lunch with friends before class at a convenience store near school.",
+                "Preparing for a welcoming event for freshmen with university classmates at the club room.",
+                "Researching materials for a debate competition with friends at the school library.",
+                "Moving into the dormitory and cleaning the dormitory room with parents at the school dormitory.",
+                "Watching Avengers together with family as it premiered at Gangdong CGV.",
+                "Reading books and studying with Sumin at a cafe near school.",
+                "Having an orientation event for the 12th club TAVE with club 12th club members at Seoul City University.",
+                "Conducting a study session and giving a presentation with study group members at Sejong University.",
+                "Starting working out alone at the gym at the school gym.",
+                "Finishing assignments and having a healing time with university classmates at a cafe.",
+                "Visiting Sejong University festival with girlfriend and seeing celebrities at Inha University festival.",
+                "Playing catchball with Sohee at the school playground.",
+                "Preparing for the graduation project and studying overnight with team members at the school classroom."]
+
+    diary_to_prompt_train = {
+        'diaries':[],
+        'prompts':[]
+    }
+    diary_to_prompt_valid = {
+        'diaries':[],
+        'prompts':[]
+    }
+    for diary, prompt in zip(diaries_train, prompts_train):
+        diary_to_prompt_train['diaries'].append(diary)
+        diary_to_prompt_train['prompts'].append("Create a cute and funny 8k webtoon style illustration : " + prompt)
+    for diary, prompt in zip(diaries_valid, prompts_valid):
+        diary_to_prompt_valid['diaries'].append(diary)
+        diary_to_prompt_valid['prompts'].append("Create a cute and funny 8k webtoon style illustration : " + prompt)
+    
+    pd.DataFrame(diary_to_prompt_train).to_csv("/Users/vvoo/Tave_2024_project/AI/4toism/gpt_fine_tuning/diary_to_prompt_train.csv", index=None, encoding='utf-8-sig')
+    pd.DataFrame(diary_to_prompt_valid).to_csv("/Users/vvoo/Tave_2024_project/AI/4toism/gpt_fine_tuning/diary_to_prompt_valid.csv", index=None, encoding='utf-8-sig')
+    return 
+
+if __name__ == "__main__":
+    print(diaryToPrompt())
