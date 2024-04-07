@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-os.environ["OPENAI_API_KEY"] = 'api_key' # api key
+os.environ["OPENAI_API_KEY"] = '' # api key
 
 from gpt_api import generate_gpt_prompt
 from dalle_api import generate_dalle_image
@@ -44,4 +44,4 @@ def gpt_api(diary_input, character_input):
     print("생성된 이미지:", generated_image_url)
 
 if __name__ == "__main__":
-    gpt_api()
+    print("None")

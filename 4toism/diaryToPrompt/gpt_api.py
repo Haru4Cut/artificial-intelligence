@@ -11,11 +11,7 @@ def generate_gpt_prompt(user_diary):
             {"role": "user", "content": f"{user_diary[0]}, {user_diary[1]}, {user_diary[2]}"}
             ]
         )
-    # print(gpt_response.choices[0])
-    # print('-'*10)
-    # print(gpt_response.choices[0].message)
-    # print('-'*10)
-    print(gpt_response.choices[0].message.content)
-    print('-'*10)
+
+    # print(gpt_response.choices[0].message.content)
 
     return gpt_response.choices[0].message.content
