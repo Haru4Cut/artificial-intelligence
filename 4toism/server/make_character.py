@@ -17,7 +17,7 @@ def make_character_prompt():
     #     "skinColor" : "황인",
     #     "etc" : "안경을 썼다."
     # }
-    
+
     # JSON 데이터에서 필요한 정보 추출
     prompt = f"{data['hairColor']}의 {data['hairLength']} 머리 스타일을 가진 {data['age']} {data['sex']} 캐릭터를 귀여운 웹툰 스타일로 그려주세요. 이 캐릭터는 {data['skinColor']} 피부를 가지고 있으며 {data['etc']}"
 

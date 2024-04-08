@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import call_gpt_api
 from call_gpt_api import haruFour
+from dalle_api import generate_dalle_image
 
 # Flask 애플리케이션 생성
 app = Flask(__name__)
@@ -18,13 +19,13 @@ def make_diary_prompt():
     #         "date" : "2022-08-11",
     #         "orderNum" : 0
     #     },
-    #     {
-    #         "cutNum" : 2,
-    #         "emotion" : 2,
-    #         "keywords" : ["아빠랑", "카페에서","커피를 마셨다"],
-    #         "date" : "2022-08-11",
-    #         "orderNum" : 1
-    #     }
+        # {
+        #     "cutNum" : 2,
+        #     "emotion" : 2,
+        #     "keywords" : ["아빠랑", "카페에서","커피를 마셨다"],
+        #     "date" : "2022-08-11",
+        #     "orderNum" : 1
+        # }
     #  ]
 
     # JSON 데이터에서 필요한 정보 추출
@@ -50,6 +51,10 @@ def make_diary_prompt():
             diary_prompt[diary['orderNum']] = haruFour().gpt_api(input_data)
 
     return diary_prompt
+    # img = []
+    # for prompt_input in diary_prompt.values():
+    #     img.append(generate_dalle_image(prompt_input, ''))
+    # return img
 
 # Flask 애플리케이션 실행 - 0.0.0.0 으로 모든 IP에 대한 연결을 허용해놓고 포트는 8082로 설정
 if __name__ == '__main__':
